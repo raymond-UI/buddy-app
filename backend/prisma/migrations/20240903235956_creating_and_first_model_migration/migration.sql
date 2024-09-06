@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "Category" AS ENUM ('INBOX', 'TODAY', 'TOMORROW', 'THIS_WEEK', 'SOMEDAY');
+CREATE TYPE "Category" AS ENUM ('INBOX', 'TODAY', 'TOMORROW', 'THIS_WEEK', 'SOMEDAY', 'TASKS');
 
 -- CreateTable
 CREATE TABLE "User" (

@@ -1,0 +1,92 @@
+
+# src/schema.graphql
+
+type Query {
+  tasks(where: TaskWhereInput): [Task!]!
+  tags(where: TagWhereInput): [Tag!]!
+}
+
+type Mutation {
+  createTask(data: CreateTaskInput!): Task!
+  updateTask(id: ID!, data: UpdateTaskInput!): Task!
+  deleteTask(id: ID!): Task!
+  createTag(data: CreateTagInput!): Tag!
+  updateTag(id: ID!, data: UpdateTagInput!): Tag!
+  deleteTag(id: ID!): Tag!
+}
+
+type Task {
+  id: ID!
+  title: String!
+  description: String
+  completed: Boolean!
+  dueDate: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  category: Category!
+  tags: [Tag!]!
+  user: User!
+}
+
+type Tag {
+  id: ID!
+  name: String!
+  color: String
+  tasks: [Task!]!
+  user: User!
+}
+
+type User {
+  id: ID!
+  email: String!
+  name: String
+  tasks: [Task!]!
+  tags: [Tag!]!
+}
+
+enum Category {
+  INBOX
+  TODAY
+  TOMORROW
+  THIS_WEEK
+  SOMEDAY
+  TASKS
+}
+
+input TaskWhereInput {
+  category: Category
+  userId: ID
+}
+
+input TagWhereInput {
+  userId: ID
+}
+
+input CreateTaskInput {
+  title: String!
+  description: String
+  dueDate: DateTime
+  category: Category!
+  tagIds: [ID!]
+}
+
+input UpdateTaskInput {
+  title: String
+  description: String
+  completed: Boolean
+  dueDate: DateTime
+  category: Category
+  tagIds: [ID!]
+}
+
+input CreateTagInput {
+  name: String!
+  color: String
+}
+
+input UpdateTagInput {
+  name: String
+  color: String
+}
+
+scalar DateTime

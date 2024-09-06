@@ -73,4 +73,5 @@ enum Category {
   TOMORROW
   THIS_WEEK
   SOMEDAY
+  TASKS
 }

@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String    @id @default(uuid())
+  email          String    @unique
+  hashedPassword String
+  name           String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  tasks          Task[]
+  tags           Tag[]
+  pomodoroSessions PomodoroSession[]
+}
+
+model Task {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  completed   Boolean  @default(false)
+  dueDate     DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  tags        TagsOnTasks[]
+  category    Category @default(INBOX)
+}
+
+model Tag {
+  id        String   @id @default(uuid())
+  name      String
+  color     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  tasks     TagsOnTasks[]
+}
+
+model TagsOnTasks {
+  taskId    String
+  tagId     String
+  task      Task     @relation(fields: [taskId], references: [id])
+  tag       Tag      @relation(fields: [tagId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@id([taskId, tagId])
+}
+
+model PomodoroSession {
+  id        String   @id @default(uuid())
+  startTime DateTime
+  endTime   DateTime?
+  duration  Int      // Duration in minutes
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+enum Category {
+  INBOX
+  TODAY
+  TOMORROW
+  THIS_WEEK
+  SOMEDAY
+}
